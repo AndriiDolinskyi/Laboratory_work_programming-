@@ -1,13 +1,12 @@
 [tool.poetry]
-name = "lab4"
+name = "lab_4_prog"
 version = "0.1.0"
 description = ""
-authors = ["AndriiDolinskyi <andriywest3010@gmail.com>"]
+authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7.9"
 Flask = "^1.1.2"
-gevent = "^20.9.0"
 
 [tool.poetry.dev-dependencies]
 
