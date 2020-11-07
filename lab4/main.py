@@ -1,18 +1,19 @@
+# This is a sample Python script.
+
+# Press Shift+F10 to execute it or replace it with your code.
+# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 from gevent.pywsgi import WSGIServer
 from flask import Flask
-
 app = Flask(__name__)
 
 
 
 @app.route('/')
 def index():
-    return 'Hello, World!'
+    return 'Hello, World! {7}'
+# Press the green button in the gutter to run the script.
 
-@app.route("/api/v1/hello-world-/<num_of_variant>")
-def hello_world(num_of_variant):
-    return 'Hello, World! {'+ num_of_variant + '}'
-
-app.debug = True
-http_server = WSGIServer(('127.0.0.1',8080), app)
+http_server = WSGIServer(("127.0.0.1", 8080), app)
 http_server.serve_forever()
+
+# See PyCharm help at https://www.jetbrains.com/help/pycharm/
