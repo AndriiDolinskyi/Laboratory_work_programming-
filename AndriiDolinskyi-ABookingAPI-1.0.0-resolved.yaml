@@ -1,0 +1,313 @@
+---
+openapi: 3.0.0
+info:
+  title: Auditorium Booking Service
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/AndriiDolinskyi/ABookingAPI/1.0.0
+  description: SwaggerHub API Auto Mocking
+paths:
+  /user:
+    post:
+      tags:
+      - User
+      summary: Create new user
+      description: Create new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        "400":
+          description: Invalid body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  property_name:
+                    type: string
+                nullable: false
+        "409":
+          description: User with such email already exists
+  /user/{userId}:
+    get:
+      tags:
+      - User
+      summary: Get user data
+      description: Get user data
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        "400":
+          description: Invalid Id
+        "404":
+          description: User not found
+  /auditorium:
+    post:
+      tags:
+      - Auditorium
+      summary: Add auditorium to DB
+      description: Add auditorium to DB
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/auditorium'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/auditorium'
+        "400":
+          description: Invalid body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  property_name:
+                    type: string
+                nullable: false
+        "409":
+          description: Auditorium with such number already exists
+  /auditorium/{auditoriumid}:
+    get:
+      tags:
+      - Auditorium
+      summary: Get auditorium by ID
+      description: Get auditorium by ID
+      parameters:
+      - name: auditoriumid
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: auditorium body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/auditorium'
+        "400":
+          description: Invalid Id
+        "404":
+          description: auditorium not found
+  /booking:
+    post:
+      tags:
+      - Booking
+      summary: Add new booking to DB
+      description: Add new booking to DB
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/booking'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/booking'
+        "400":
+          description: Invalid body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  property_name:
+                    type: string
+                nullable: false
+        "406":
+          description: Auditorium on this time are already booked
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Auditorium on this time are already booked
+        "409":
+          description: Such booking number already exists
+  /booking/{bookingid}:
+    get:
+      tags:
+      - Booking
+      summary: Get booking by ID
+      description: Get booking by ID
+      parameters:
+      - name: bookingid
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: booking body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/booking'
+        "400":
+          description: Invalid Id
+        "404":
+          description: booking not found
+    put:
+      tags:
+      - Booking
+      summary: Edit booking
+      parameters:
+      - name: bookingid
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: Edit booking
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/booking'
+        "400":
+          description: Invalid Id
+        "404":
+          description: Booking not found
+        "406":
+          description: Auditorium on this time are already booked
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Auditorium on this time are already booked
+    delete:
+      tags:
+      - Booking
+      summary: Delete booking
+      parameters:
+      - name: bookingid
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: Booking has been deleted
+        "400":
+          description: Invalid Id
+        "404":
+          description: Booking not found
+  /booking/{userid}:
+    get:
+      tags:
+      - Booking
+      summary: Get bookings by user's ID
+      description: Get bookings by user's ID
+      parameters:
+      - name: userid
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: array of bookings this user made
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/booking'
+        "400":
+          description: Invalid user's Id
+        "401":
+          description: User is not authorized
+components:
+  schemas:
+    user:
+      type: object
+      properties:
+        UUID:
+          type: string
+          format: uuid
+          example: 3947539c-9c5c-45da-a2fe-62cc2f82f53d
+        Name:
+          type: string
+        Email:
+          type: string
+          example: smth@com
+        Password:
+          type: string
+          format: password
+      nullable: false
+    auditorium:
+      type: object
+      properties:
+        UUID:
+          type: string
+          description: ID from DB
+          format: uuid
+          example: 744f239c-9c5c-69da-b5de-62cc2f13373d
+        Number_of_auditorium:
+          type: integer
+          description: the number of auditorium
+          example: 3
+    booking:
+      type: object
+      properties:
+        UUID:
+          type: string
+          description: ID from DB
+          format: uuid
+          example: 744f239c-9c5c-69da-b5de-62cc2f13373d
+        user's_UUID:
+          type: string
+          description: user, who booked auditorium (his/her UUID)
+          format: uuid
+        auditorium_UUID:
+          type: string
+          description: auditorium, which was booked by the user (its UUID)
+          format: uuid
+          example: 1ec7f5da-7a0e-4aa9-8d6d-af3ee343b3ab
+        booking_date_time:
+          type: string
+          format: date-time
+          example: 2020-09-29T09:12:33.001Z
+        expire_date_time:
+          type: string
+          format: date-time
+          example: 2020-09-29T09:19:00.001Z
