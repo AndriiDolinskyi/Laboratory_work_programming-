@@ -142,6 +142,13 @@ paths:
                   property_name:
                     type: string
                 nullable: false
+        "406":
+          description: Auditorium on this time are already booked
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Auditorium on this time are already booked
         "409":
           description: Such booking number already exists
   /booking/{bookingid}:
@@ -194,6 +201,13 @@ paths:
           description: Invalid Id
         "404":
           description: Booking not found
+        "406":
+          description: Auditorium on this time are already booked
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Auditorium on this time are already booked
     delete:
       tags:
       - Booking
@@ -214,6 +228,34 @@ paths:
           description: Invalid Id
         "404":
           description: Booking not found
+  /booking/{userid}:
+    get:
+      tags:
+      - Booking
+      summary: Get bookings by user's ID
+      description: Get bookings by user's ID
+      parameters:
+      - name: userid
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: array of bookings this user made
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/booking'
+        "400":
+          description: Invalid user's Id
+        "401":
+          description: User is not authorized
 components:
   schemas:
     user:
@@ -256,17 +298,11 @@ components:
           type: string
           description: user, who booked auditorium (his/her UUID)
           format: uuid
-        user's_name:
-          type: string
-          description: user, who booked auditorium (his/her name)
         auditorium_UUID:
           type: string
           description: auditorium, which was booked by the user (its UUID)
           format: uuid
           example: 1ec7f5da-7a0e-4aa9-8d6d-af3ee343b3ab
-        auditorium_number:
-          type: integer
-          description: auditorium, which was booked by the user (its number)
         booking_date_time:
           type: string
           format: date-time
