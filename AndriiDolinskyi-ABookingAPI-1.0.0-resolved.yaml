@@ -8,6 +8,19 @@ servers:
   description: SwaggerHub API Auto Mocking
 paths:
   /user:
+    get:
+      tags:
+      - User
+      summary: Get all users
+      description: Get all users
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/user_w_id'
     post:
       tags:
       - User
@@ -23,17 +36,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: '#/components/schemas/user_w_id'
         "400":
-          description: Invalid body
+          description: Invalid body, Valid body
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  property_name:
-                    type: string
-                nullable: false
+                $ref: '#/components/schemas/user'
         "409":
           description: User with such email already exists
   /user/{userId}:
@@ -49,18 +58,31 @@ paths:
         style: simple
         explode: false
         schema:
-          type: string
+          type: integer
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: '#/components/schemas/user_w_id'
         "400":
           description: Invalid Id
         "404":
           description: User not found
   /auditorium:
+    get:
+      tags:
+      - Auditorium
+      summary: Get all auditoriums
+      description: Get all auditoriums
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/auditorium_w_id'
     post:
       tags:
       - Auditorium
@@ -78,15 +100,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/auditorium'
         "400":
-          description: Invalid body
+          description: Invalid body, Valid body
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  property_name:
-                    type: string
-                nullable: false
+                $ref: '#/components/schemas/auditorium'
         "409":
           description: Auditorium with such number already exists
   /auditorium/{auditoriumid}:
@@ -102,20 +120,32 @@ paths:
         style: simple
         explode: false
         schema:
-          type: string
-          format: uuid
+          type: integer
       responses:
         "200":
           description: auditorium body
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/auditorium'
+                $ref: '#/components/schemas/auditorium_w_id'
         "400":
           description: Invalid Id
         "404":
           description: auditorium not found
   /booking:
+    get:
+      tags:
+      - Booking
+      summary: Get all bookings
+      description: Get all bookings
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/booking_w_id'
     post:
       tags:
       - Booking
@@ -131,17 +161,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/booking'
+                $ref: '#/components/schemas/booking_w_id'
         "400":
-          description: Invalid body
+          description: Invalid body, Valid body
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  property_name:
-                    type: string
-                nullable: false
+                $ref: '#/components/schemas/booking'
         "406":
           description: Auditorium on this time are already booked
           content:
@@ -164,17 +190,14 @@ paths:
         style: simple
         explode: false
         schema:
-          type: string
-          format: uuid
+          type: integer
       responses:
         "200":
           description: booking body
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/booking'
-        "400":
-          description: Invalid Id
+                $ref: '#/components/schemas/booking_w_id'
         "404":
           description: booking not found
     put:
@@ -188,8 +211,7 @@ paths:
         style: simple
         explode: false
         schema:
-          type: string
-          format: uuid
+          type: integer
       responses:
         "200":
           description: Edit booking
@@ -197,8 +219,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/booking'
-        "400":
-          description: Invalid Id
         "404":
           description: Booking not found
         "406":
@@ -219,16 +239,13 @@ paths:
         style: simple
         explode: false
         schema:
-          type: string
-          format: uuid
+          type: integer
       responses:
         "200":
           description: Booking has been deleted
-        "400":
-          description: Invalid Id
         "404":
           description: Booking not found
-  /booking/{userid}:
+  /booking/user/{userid}:
     get:
       tags:
       - Booking
@@ -241,8 +258,7 @@ paths:
         style: simple
         explode: false
         schema:
-          type: string
-          format: uuid
+          type: integer
       responses:
         "200":
           description: array of bookings this user made
@@ -251,9 +267,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/booking'
-        "400":
-          description: Invalid user's Id
+                  $ref: '#/components/schemas/booking_w_id'
+        "404":
+          description: User not found
         "401":
           description: User is not authorized
 components:
@@ -261,10 +277,21 @@ components:
     user:
       type: object
       properties:
-        UUID:
+        Name:
           type: string
-          format: uuid
-          example: 3947539c-9c5c-45da-a2fe-62cc2f82f53d
+        Email:
+          type: string
+          example: smth@com
+        Password:
+          type: string
+          format: password
+      nullable: false
+    user_w_id:
+      type: object
+      properties:
+        Id:
+          type: integer
+          example: 1
         Name:
           type: string
         Email:
@@ -277,11 +304,17 @@ components:
     auditorium:
       type: object
       properties:
-        UUID:
-          type: string
+        Number_of_auditorium:
+          type: integer
+          description: the number of auditorium
+          example: 3
+    auditorium_w_id:
+      type: object
+      properties:
+        Id:
+          type: integer
           description: ID from DB
-          format: uuid
-          example: 744f239c-9c5c-69da-b5de-62cc2f13373d
+          example: 1
         Number_of_auditorium:
           type: integer
           description: the number of auditorium
@@ -289,20 +322,37 @@ components:
     booking:
       type: object
       properties:
-        UUID:
+        user's_id:
+          type: integer
+          description: user, who booked auditorium (his/her id)
+          example: 1
+        auditorium_id:
+          type: integer
+          description: auditorium, which was booked by the user (its id)
+          example: 1
+        booking_date_time:
           type: string
+          format: date-time
+          example: 2020-09-29T09:12:33.001Z
+        expire_date_time:
+          type: string
+          format: date-time
+          example: 2020-09-29T09:19:00.001Z
+    booking_w_id:
+      type: object
+      properties:
+        Id:
+          type: integer
           description: ID from DB
-          format: uuid
-          example: 744f239c-9c5c-69da-b5de-62cc2f13373d
-        user's_UUID:
-          type: string
-          description: user, who booked auditorium (his/her UUID)
-          format: uuid
-        auditorium_UUID:
-          type: string
-          description: auditorium, which was booked by the user (its UUID)
-          format: uuid
-          example: 1ec7f5da-7a0e-4aa9-8d6d-af3ee343b3ab
+          example: 1
+        user's_id:
+          type: integer
+          description: user, who booked auditorium (his/her id)
+          example: 1
+        auditorium_id:
+          type: integer
+          description: auditorium, which was booked by the user (its id)
+          example: 1
         booking_date_time:
           type: string
           format: date-time

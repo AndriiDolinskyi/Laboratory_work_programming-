@@ -1,10 +1,10 @@
 
-from sqlalchemy import create_engine
 from gevent.pywsgi import WSGIServer
 from flask import Flask
-from data_base import app
+from lab_4.data_base import app
 #from data_base import User
-from data_base import manager
+from lab_4.data_base import manager
+
 
 if __name__ =="__main__":
     import sys

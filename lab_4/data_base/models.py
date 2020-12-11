@@ -1,4 +1,4 @@
-# from .__init__ import  db
+# from lab_4.data_base import  db
 # from datetime import datetime
 #
 # class User(db.Model):
