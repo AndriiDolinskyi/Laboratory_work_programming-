@@ -83,13 +83,33 @@ bookings_schema = BookingSchema(many=True)
 
 
 
-def datetime_validation(aud_id, d):
+def datetime_validation(aud_id, d, e):
     all_bookings = Booking.query.all()
     for booking in all_bookings:
         if booking.auditorium_id == int(aud_id):
-            temp = str(booking.booking_date_time)
-            if temp == d:
+            d1 = datetime.strptime(d,"%Y-%m-%dT%H:%M:%S")
+            d2 = datetime.strptime(e,"%Y-%m-%dT%H:%M:%S")
+            # print(str(d1) + "----" + str(d2))
+
+            #print(type(d1))
+            #ds = datetime.strptime(booking.booking_date_time,"%Y-%m-%dT%H:%M:%S")
+            ds = booking.booking_date_time
+            #print(type(ds))
+            #df = datetime.strptime(booking.expire_date_time,"%Y-%m-%dT%H:%M:%S")
+            df = booking.expire_date_time
+            # print(str(ds) + "----" + str(df))
+            # print(ds <= d1 <= df)
+            # print(ds <= d2 <= df)
+            # print(ds == d1)
+            if ds <= d1 <= df:
+                print("in between")
                 return False
+            elif ds <= d2 <= df:
+                print("in between")
+                return False
+            else:
+                continue
+
 
     return True
 
@@ -301,7 +321,7 @@ def add_booking():
     if Auditorium.query.get(auditorium_id) == None:
         return "Auditorium not found", 404
 
-    if not datetime_validation(auditorium_id, booking_date_time):
+    if not datetime_validation(auditorium_id, booking_date_time, expire_date_time):
         return "Auditorium on this are already booked", 406
 
     new_booking = Booking(user_id, auditorium_id, booking_date_time, expire_date_time)
@@ -345,8 +365,8 @@ def update_booking(booking_id):
     booking.booking_date_time = booking_date_time
     booking.expire_date_time = expire_date_time
 
-    # if not datetime_validation(auditorium_id, booking_date_time):
-    #     return "Auditorium on this are already booked", 406
+    if not datetime_validation(auditorium_id, booking_date_time, expire_date_time):
+         return "Auditorium on this are already booked", 406
 
     db.session.commit()
 
